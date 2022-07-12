@@ -6,15 +6,15 @@ export const renderRoutes = () => (
     <Routes>
         <Route
             path={'/'}
-            element={
+            element={(
                 <Home/>
-            }
+            )}
         />
         <Route
             path={'/room/:id'}
-            element={
+            element={(
                 <Room/>
-            }
+            )}
         />
     </Routes>
 )

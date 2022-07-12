@@ -1,17 +1,12 @@
-import React, { useEffect } from 'react'
-import { useRoomStore as roomStore } from 'lib/stores'
-import { useStore } from 'outstated'
+import React from 'react'
 import styled from 'styled-components'
+import { useRoomStore } from 'lib/stores'
 
 export const CreateButton: React.FunctionComponent = () => {
-    const { ws } = useStore(roomStore)
-
-    const createRoom = () => {
-        ws.emit('create-room')
-    }
+    const { ws } = useRoomStore()
 
     return (
-        <CreateRoomButton onClick={createRoom}>
+        <CreateRoomButton onClick={() => ws.emit('create-room')}>
             Crete new room to stream
         </CreateRoomButton>
     )

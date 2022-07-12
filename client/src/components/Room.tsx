@@ -1,26 +1,29 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { useStore } from 'outstated'
-import { useRoomStore as roomStore } from 'lib/stores'
+import { useRoomStore } from 'lib/stores'
 import { VideoPlayer } from './VideoPlayer'
-import { PeerState } from 'lib/stores/useRoomStore'
 
 export const Room: React.FunctionComponent = () => {
     const { id } = useParams()
-    const { ws, peer, stream, peers } = useStore(roomStore)
+    const { ws, peer, stream, peers } = useRoomStore()
 
     useEffect(() => {
         if (peer) {
             // eslint-disable-next-line no-underscore-dangle
-            ws.emit('join-room', { roomId: id, peerId: peer._id })
+            ws.emit('join-room', {
+                roomId: id,
+                peerId: peer._id
+            })
         }
-    }, [id, peer, ws])
+    }, [id, peer])
 
     return (
         <VideoContainer>
-            <VideoPlayer stream={stream}/>
-            {Object.values(peers as PeerState).map((peer, index) => (
+            {stream && (
+                <VideoPlayer stream={stream}/>
+            )}
+            {Object.values(peers).map((peer, index) => (
                 <VideoPlayer
                     key={index}
                     stream={peer.stream}
