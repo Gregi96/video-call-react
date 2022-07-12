@@ -9,9 +9,11 @@ const WS = 'http://localhost:8080'
 
 const ws = socketIoClient(WS)
 
-export type PeerState = Record<string, {
+type PeerStream = {
     stream: MediaStream
-}>
+}
+
+export type PeerState = Record<string, PeerStream>
 
 type RoomCreatedType = {
     roomId: string
@@ -35,10 +37,10 @@ export const useRoomStore = (): useRoomStoreResponse => {
     const removePeer = (peerId: string) => setPeers(prev => Object.keys(prev)
         .reduce((acc, key) => {
             if (key !== peerId) {
-                return ({
+                return {
                     ...acc,
                     [key]: prev[key]
-                })
+                }
             }
 
             return acc
@@ -91,16 +93,12 @@ export const useRoomStore = (): useRoomStoreResponse => {
         ws.on('user-joined', ({ peerId }) => {
             const call = myPeer.call(peerId, stream)
 
-            call.on('stream', peerStream =>
-                addPeer(peerId, peerStream)
-            )
+            call.on('stream', peerStream => addPeer(peerId, peerStream))
         })
 
         myPeer.on('call', call => {
             call.answer(stream)
-            call.on('stream', peerStream =>
-                addPeer(call.peer, peerStream)
-            )
+            call.on('stream', peerStream => addPeer(call.peer, peerStream))
         })
     }, [myPeer, stream, peers])
 

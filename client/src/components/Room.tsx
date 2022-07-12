@@ -10,9 +10,9 @@ export const Room: React.FunctionComponent = () => {
 
     useEffect(() => {
         if (peer) {
-            // eslint-disable-next-line no-underscore-dangle
             ws.emit('join-room', {
                 roomId: id,
+                // eslint-disable-next-line no-underscore-dangle
                 peerId: peer._id
             })
         }

@@ -1,2 +1,2 @@
 export { renderRoutes } from './RouteList'
-export { ScreenNamesWithParams } from './screenNames'
+export { ScreenNamesWithParams, ScreenNames } from './screenNames'
