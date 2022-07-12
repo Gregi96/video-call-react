@@ -5,5 +5,5 @@ export const stores = [
     roomStore
 ]
 
-export const useRoomStore = (): useRoomStoreResponse  => useStore(roomStore)
+export const useRoomStore = () => useStore(roomStore)
 

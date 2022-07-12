@@ -109,5 +109,5 @@ export const useRoomStore = (): useRoomStoreResponse => {
         addPeer,
         removePeer,
         peers
-    } as useRoomStoreResponse
+    }
 }
