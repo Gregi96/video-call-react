@@ -17,20 +17,16 @@ export const useRoomStore = () => {
     const navigation = useNavigate()
 
     const removePeer = (peerId: string) => {
-        setPeers(prev => {
-            const filterProperty = Object.keys(prev).reduce((acc, key) => {
-                if (key !== peerId) {
-                    return ({
-                        ...acc,
-                        [key]: prev[key]
-                    })
-                }
+        setPeers(prev => Object.keys(prev).reduce((acc, key) => {
+            if (key !== peerId) {
+                return ({
+                    ...acc,
+                    [key]: prev[key]
+                })
+            }
 
-                return acc
-            }, {} as PeerState)
-
-            return (filterProperty)
-        })
+            return acc
+        }, {} as PeerState))
     }
 
     const addPeer = (peerId: string, stream: MediaStream) => {
@@ -49,7 +45,7 @@ export const useRoomStore = () => {
 
         try {
             navigator.mediaDevices.getUserMedia({video: true, audio: true})
-                .then(stream => setStream(stream))
+                .then(setStream)
         } catch (error) {
             console.log(error)
         }
