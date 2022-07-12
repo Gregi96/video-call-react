@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useRoomStore } from 'lib/stores'
 import { VideoPlayer } from './VideoPlayer'
+import { SocketEvents } from 'lib/types'
 
 export const Room: React.FunctionComponent = () => {
     const { id } = useParams()
@@ -10,7 +11,7 @@ export const Room: React.FunctionComponent = () => {
 
     useEffect(() => {
         if (peer) {
-            ws.emit('join-room', {
+            ws.emit(SocketEvents.joinRoom, {
                 roomId: id,
                 // eslint-disable-next-line no-underscore-dangle
                 peerId: peer._id
@@ -21,7 +22,11 @@ export const Room: React.FunctionComponent = () => {
     return (
         <VideoContainer>
             {stream && (
-                <VideoPlayer stream={stream}/>
+                <Fragment>
+                    <VideoPlayer
+                        stream={stream}
+                    />
+                </Fragment>
             )}
             {Object.values(peers).map((peer, index) => (
                 <VideoPlayer
@@ -42,11 +47,8 @@ export const Room: React.FunctionComponent = () => {
 }
 
 const VideoContainer = styled.div`
-    display: flex;
-    flex-wrap: wrap;
-    video {
-      width: 49%;
-    }
+    display: grid;
+    grid-template-columns: 50% 50%;
 `
 
 const InviteText = styled.div`

@@ -4,16 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { v4 as uuidV4 } from 'uuid'
 import Peer from 'peerjs'
 import { ScreenNamesWithParams } from 'lib/routing'
-
-const WS = 'http://localhost:8080'
-
-const ws = socketIoClient(WS)
-
-type PeerStream = {
-    stream: MediaStream
-}
-
-export type PeerState = Record<string, PeerStream>
+import { SocketEvents, PeerState } from 'lib/types'
+import { APP_CONFIG } from 'lib/config'
 
 type RoomCreatedType = {
     roomId: string
@@ -27,6 +19,8 @@ export type useRoomStoreResponse = {
     addPeer(peerId: string, stream: MediaStream): void,
     removePeer(peerId: string, stream: MediaStream): void
 }
+
+const ws = socketIoClient(APP_CONFIG.WP_URL)
 
 export const useRoomStore = (): useRoomStoreResponse => {
     const [peers, setPeers] = useState<PeerState>({})
@@ -67,16 +61,15 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 .then(setStream)
         } catch (error) {
             alert('Couldn\'t get the stream')
-            console.log(error)
         }
 
-        ws.on('room-created', ({ roomId }: RoomCreatedType) => {
+        ws.on(SocketEvents.roomCreated, ({ roomId }: RoomCreatedType) => {
             navigation(ScreenNamesWithParams.chatRoom(roomId))
         })
-        ws.on('get-users', ({ roomId, participants }) => {
+        ws.on(SocketEvents.getUsers, ({ roomId, participants }) => {
             console.log('participants', participants)
         })
-        ws.on('user-disconnected', ({ peerId }) => {
+        ws.on(SocketEvents.userDisconnected, ({ peerId }) => {
             removePeer(peerId)
         })
     }, [])
@@ -90,7 +83,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
             return
         }
 
-        ws.on('user-joined', ({ peerId }) => {
+        ws.on(SocketEvents.userJoined, ({ peerId }) => {
             const call = myPeer.call(peerId, stream)
 
             call.on('stream', peerStream => addPeer(peerId, peerStream))

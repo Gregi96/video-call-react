@@ -1,13 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useRoomStore } from 'lib/stores'
+import { useRoomStore, useTranslationStore } from 'lib/stores'
+import { SocketEvents } from 'lib/types'
 
 export const CreateButton: React.FunctionComponent = () => {
     const { ws } = useRoomStore()
+    const { T } = useTranslationStore()
 
     return (
-        <CreateRoomButton onClick={() => ws.emit('create-room')}>
-            Crete new room to stream
+        <CreateRoomButton onClick={() => ws.emit(SocketEvents.createRoom)}>
+            {T.createNewRoomButton}
         </CreateRoomButton>
     )
 }
