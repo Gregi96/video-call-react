@@ -1,12 +1,16 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'outstated'
+import { useRoomStore as roomStore } from 'lib/stores'
 import { App } from './app'
 import './index.css'
 import './reset.css'
-import { BrowserRouter } from 'react-router-dom'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
-        <App />
+        <Provider stores={[roomStore]}>
+            <App />
+        </Provider>
     </BrowserRouter>
 )

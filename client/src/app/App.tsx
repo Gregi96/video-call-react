@@ -1,10 +1,13 @@
 import React from 'react'
 import styled, { ThemeProvider } from 'styled-components'
 import { theme } from 'lib/styles'
+import { renderRoutes } from 'lib/routing'
 
 export const App = () => (
     <ThemeProvider theme={theme}>
-        App
+        <AppContainer>
+            {renderRoutes()}
+        </AppContainer>
     </ThemeProvider>
 )
 
