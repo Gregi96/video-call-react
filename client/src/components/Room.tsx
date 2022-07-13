@@ -25,6 +25,7 @@ export const Room: React.FunctionComponent = () => {
                 <Fragment>
                     <VideoPlayer
                         stream={stream}
+                        muted
                     />
                 </Fragment>
             )}

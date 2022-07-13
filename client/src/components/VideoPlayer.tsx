@@ -3,10 +3,12 @@ import styled from 'styled-components'
 
 type VideoPlayerProps = {
     stream: MediaStream,
+    muted?: boolean
 }
 
 export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
-    stream
+    stream,
+    muted
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -20,7 +22,7 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
         <Video
             ref={videoRef}
             autoPlay
-            muted
+            muted={muted}
         />
     )
 }
