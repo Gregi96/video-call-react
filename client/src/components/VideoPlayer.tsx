@@ -21,8 +21,11 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
     }, [stream])
 
     useEffect(() => {
-        stream.getVideoTracks()[0].enabled = activeCamera
-        stream.getAudioTracks()[0].enabled = activeMicrophone
+        const [ videoTrack ] = stream.getVideoTracks()
+        const [ audioTrack ] = stream.getAudioTracks()
+
+        videoTrack.enabled = activeCamera
+        audioTrack.enabled = activeMicrophone
     }, [activeCamera, activeMicrophone])
 
     return (
