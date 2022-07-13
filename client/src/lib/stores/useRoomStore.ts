@@ -58,7 +58,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
             audio: true
         })
             .then(setStream)
-            .catch(error => console.log(error))
+            .catch(console.log)
 
         ws.on(SocketEvents.roomCreated, ({ roomId }: RoomCreatedType) => {
             navigation(ScreenNamesWithParams.chatRoom(roomId))
