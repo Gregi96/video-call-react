@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { Icons } from 'assets'
 import { useRoomStore, useTranslationStore } from 'lib/stores'
 import { SocketEvents } from 'lib/types'
 import { VideoPlayer } from './VideoPlayer'
@@ -9,6 +10,8 @@ export const Room: React.FunctionComponent = () => {
     const { id } = useParams()
     const { T } = useTranslationStore()
     const { ws, peer, stream, peers } = useRoomStore()
+    const [activeCamera, setActiveCamera] = useState(true)
+    const [activeMicrophone, setActiveMicrophone] = useState(true)
 
     useEffect(() => {
         if (peer) {
@@ -22,10 +25,29 @@ export const Room: React.FunctionComponent = () => {
     return (
         <VideoContainer>
             {stream && (
-                <VideoPlayer
-                    stream={stream}
-                    muted
-                />
+                <VideoUserContainer>
+                    <VideoPlayer
+                        stream={stream}
+                        activeCamera={activeCamera}
+                        activeMicrophone={activeMicrophone}
+                    />
+                    <ControllersIcons>
+                        <IconContainer onClick={() => setActiveCamera(prev => !prev)}>
+                            {activeCamera ? (
+                                <Icons.Camera/>
+                            ) : (
+                                <Icons.CameraOff/>
+                            )}
+                        </IconContainer>
+                        <IconContainer onClick={() => setActiveMicrophone(prev => !prev)}>
+                            {activeMicrophone ? (
+                                <Icons.Microphone/>
+                            ) : (
+                                <Icons.MicrophoneOff/>
+                            )}
+                        </IconContainer>
+                    </ControllersIcons>
+                </VideoUserContainer>
             )}
             {Object.values(peers).map((peer, index) => (
                 <VideoPlayer
@@ -61,5 +83,28 @@ const InviteUrl = styled.div`
     margin-left: auto;
     margin-right: auto;
     margin-top: 30px;
+`
+
+const ControllersIcons = styled.div`
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+`
+
+const VideoUserContainer = styled.div`
+    position: relative;
+`
+
+const IconContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: ${({ theme }) => theme.colors.lightblue};
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
 `
 

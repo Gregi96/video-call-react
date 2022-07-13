@@ -3,12 +3,14 @@ import styled from 'styled-components'
 
 type VideoPlayerProps = {
     stream: MediaStream,
-    muted?: boolean
+    activeCamera?: boolean,
+    activeMicrophone?: boolean
 }
 
 export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
     stream,
-    muted
+    activeCamera = true,
+    activeMicrophone = true
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null)
 
@@ -18,11 +20,15 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
         }
     }, [stream])
 
+    useEffect(() => {
+        stream.getVideoTracks()[0].enabled = activeCamera
+        stream.getAudioTracks()[0].enabled = activeMicrophone
+    }, [activeCamera, activeMicrophone])
+
     return (
         <Video
             ref={videoRef}
             autoPlay
-            muted={muted}
         />
     )
 }
