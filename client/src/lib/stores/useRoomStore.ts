@@ -6,8 +6,6 @@ import Peer from 'peerjs'
 import { ScreenNamesWithParams } from 'lib/routing'
 import { SocketEvents, PeerState } from 'lib/types'
 import { APP_CONFIG } from 'lib/config'
-import { Simulate } from 'react-dom/test-utils'
-import error = Simulate.error
 
 type RoomCreatedType = {
     roomId: string
