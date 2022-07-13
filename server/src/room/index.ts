@@ -1,7 +1,8 @@
 import { Socket } from 'socket.io'
 import { v4 as uuidV4 } from 'uuid'
+import { Events } from '../types'
 
-const rooms: Record<string, Array<string>> = {}
+const rooms: Record<string, string[]> = {}
 
 type JoinRoomProps = {
     roomId: string,
@@ -13,26 +14,26 @@ export const roomHandler = (socket: Socket) => {
         const roomId = uuidV4()
 
         rooms[roomId] = []
-        socket.emit("room-created", { roomId })
+        socket.emit(Events.RoomCreated, { roomId })
     }
 
     const leaveRoom = ({ roomId, peerId }: JoinRoomProps) => {
         rooms[roomId] = rooms[roomId].filter(id => id !== peerId)
-        socket.to(roomId).emit("user-disconnected", { peerId })
+        socket.to(roomId).emit(Events.UserDisconnected, { peerId })
     }
 
     const joinRoom = ({ roomId, peerId }: JoinRoomProps) => {
         if (rooms[roomId]) {
             rooms[roomId].push(peerId)
             socket.join(roomId)
-            socket.to(roomId).emit("user-joined", { peerId })
-            socket.emit('get-users', {
+            socket.to(roomId).emit(Events.UserJoined, { peerId })
+            socket.emit(Events.GetUsers, {
                 roomId,
                 participants: rooms[roomId]
             })
         }
 
-        socket.on("disconnect", () => {
+        socket.on(Events.Disconnect, () => {
             if (rooms[roomId]) {
                 leaveRoom({
                     roomId,
@@ -42,6 +43,6 @@ export const roomHandler = (socket: Socket) => {
         })
     }
 
-    socket.on("create-room", createRoom)
-    socket.on('join-room', joinRoom)
+    socket.on(Events.CreateRoom, createRoom)
+    socket.on(Events.JoinRoom, joinRoom)
 }

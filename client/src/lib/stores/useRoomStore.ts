@@ -6,6 +6,8 @@ import Peer from 'peerjs'
 import { ScreenNamesWithParams } from 'lib/routing'
 import { SocketEvents, PeerState } from 'lib/types'
 import { APP_CONFIG } from 'lib/config'
+import { Simulate } from 'react-dom/test-utils'
+import error = Simulate.error
 
 type RoomCreatedType = {
     roomId: string
@@ -53,15 +55,12 @@ export const useRoomStore = (): useRoomStoreResponse => {
 
         setMyPeer(peer)
 
-        try {
-            navigator.mediaDevices.getUserMedia({
-                video: true,
-                audio: true
-            })
-                .then(setStream)
-        } catch (error) {
-            alert('Couldn\'t get the stream')
-        }
+        navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true
+        })
+            .then(setStream)
+            .catch(error => console.log(error))
 
         ws.on(SocketEvents.roomCreated, ({ roomId }: RoomCreatedType) => {
             navigation(ScreenNamesWithParams.chatRoom(roomId))
@@ -75,11 +74,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
     }, [])
 
     useEffect(() => {
-        if (!myPeer) {
-            return
-        }
-
-        if (!stream) {
+        if (!myPeer || !stream) {
             return
         }
 

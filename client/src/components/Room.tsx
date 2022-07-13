@@ -1,19 +1,19 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { useRoomStore } from 'lib/stores'
-import { VideoPlayer } from './VideoPlayer'
+import { useRoomStore, useTranslationStore } from 'lib/stores'
 import { SocketEvents } from 'lib/types'
+import { VideoPlayer } from './VideoPlayer'
 
 export const Room: React.FunctionComponent = () => {
     const { id } = useParams()
+    const { T } = useTranslationStore()
     const { ws, peer, stream, peers } = useRoomStore()
 
     useEffect(() => {
         if (peer) {
             ws.emit(SocketEvents.joinRoom, {
                 roomId: id,
-                // eslint-disable-next-line no-underscore-dangle
                 peerId: peer.id
             })
         }
@@ -22,12 +22,10 @@ export const Room: React.FunctionComponent = () => {
     return (
         <VideoContainer>
             {stream && (
-                <Fragment>
-                    <VideoPlayer
-                        stream={stream}
-                        muted
-                    />
-                </Fragment>
+                <VideoPlayer
+                    stream={stream}
+                    muted
+                />
             )}
             {Object.values(peers).map((peer, index) => (
                 <VideoPlayer
@@ -37,7 +35,7 @@ export const Room: React.FunctionComponent = () => {
             ))}
             <InviteUrl>
                 <InviteText>
-                    Copy url to invite friends
+                    {T.copyUrlToInvite}
                 </InviteText>
                 <div>
                     {window.location.href}
