@@ -1,3 +1,5 @@
 export type Dictionary = {
-    appName: string
+    appName: string,
+    createNewRoomButton: string,
+    copyUrlToInvite: string
 }
