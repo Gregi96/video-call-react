@@ -31,7 +31,7 @@ export const Room: React.FunctionComponent = () => {
                         activeCamera={activeCamera}
                         activeMicrophone={activeMicrophone}
                     />
-                    <ControllersIcons>
+                    <ControllerIcons>
                         <IconContainer onClick={() => setActiveCamera(prev => !prev)}>
                             {activeCamera ? (
                                 <Icons.Camera/>
@@ -46,7 +46,7 @@ export const Room: React.FunctionComponent = () => {
                                 <Icons.MicrophoneOff/>
                             )}
                         </IconContainer>
-                    </ControllersIcons>
+                    </ControllerIcons>
                 </VideoUserContainer>
             )}
             {Object.values(peers).map((peer, index) => (
@@ -85,7 +85,7 @@ const InviteUrl = styled.div`
     margin-top: 30px;
 `
 
-const ControllersIcons = styled.div`
+const ControllerIcons = styled.div`
     display: flex;
     justify-content: center;
     position: absolute;
