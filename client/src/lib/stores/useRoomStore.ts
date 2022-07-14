@@ -220,6 +220,15 @@ export const useRoomStore = (): useRoomStoreResponse => {
             )
         )
 
+        return () => {
+            ws.off(SocketEvents.roomCreated)
+            ws.off(SocketEvents.getUsers)
+            ws.off(SocketEvents.userDisconnected)
+            ws.off(SocketEvents.hideCamera)
+            ws.off(SocketEvents.showCamera)
+            myPeer?.disconnect()
+            myPeer?.destroy()
+        }
     }, [])
 
     useEffect(() => {
@@ -237,6 +246,10 @@ export const useRoomStore = (): useRoomStoreResponse => {
             call.answer(stream)
             call.on('stream', peerStream => addPeer(call.peer, peerStream))
         })
+
+        return () => {
+            ws.off(SocketEvents.userJoined)
+        }
     }, [myPeer, stream, peers])
 
     return {
