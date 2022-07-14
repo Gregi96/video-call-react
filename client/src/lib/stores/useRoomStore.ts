@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { v4 as uuidV4 } from 'uuid'
 import Peer from 'peerjs'
 import { ScreenNamesWithParams } from 'lib/routing'
-import { SocketEvents, PeerState } from 'lib/types'
+import { SocketEvents, PeerState, SetState } from 'lib/types'
 import { APP_CONFIG } from 'lib/config'
 
 type RoomCreatedType = {
@@ -56,11 +56,13 @@ export const useRoomStore = (): useRoomStoreResponse => {
     const switchCameraTrack = (newStream: MediaStream, roomId = '') => {
         if (myPeer) {
             Object.values(myPeer.connections).forEach(connection => {
-                const videoTrack: any = newStream
+                const videoTrack = newStream
                     ?.getTracks()
                     .find(track => track.kind === 'video')
 
-                connection[0].peerConnection
+                const [ peerConnection ] = connection
+
+                peerConnection.peerConnection
                     .getSenders()
                     .find((sender: RTCRtpSender) => sender.track.kind === 'video')
                     .replaceTrack(videoTrack)
@@ -80,11 +82,13 @@ export const useRoomStore = (): useRoomStoreResponse => {
     const switchAudioTrack = (newStream: MediaStream) => {
         if (myPeer) {
             Object.values(myPeer.connections).forEach(connection => {
-                const audioTrack: any = newStream
+                const audioTrack = newStream
                     ?.getTracks()
                     .find(track => track.kind === 'audio')
 
-                connection[0].peerConnection
+                const [ peerConnection ] = connection
+
+                peerConnection.peerConnection
                     .getSenders()
                     .find((sender: RTCRtpSender) => sender.track.kind === 'audio')
                     .replaceTrack(audioTrack)
@@ -176,12 +180,12 @@ export const useRoomStore = (): useRoomStoreResponse => {
             removePeer(peerId)
         })
 
-        ws.on(SocketEvents.hideCamera, ({ peerId, roomId }) => {
+        ws.on(SocketEvents.hideCamera, ({ peerId, roomId }) =>
             setPeers(prevState =>
                 Object.keys(prevState).reduce((acc, key) => {
                     if (key === peerId) {
-                        const updatedStream = prevState[key].stream.getVideoTracks()[0]
-                        updatedStream.enabled = false
+                        const [ videoTrack ] = prevState[key].stream.getVideoTracks()
+                        videoTrack.enabled = false
 
                         return {
                             ...acc,
@@ -194,14 +198,14 @@ export const useRoomStore = (): useRoomStoreResponse => {
                     return acc
                 }, {})
             )
-        })
+        )
 
-        ws.on(SocketEvents.showCamera, ({ peerId, roomId }) => {
+        ws.on(SocketEvents.showCamera, ({ peerId, roomId }) =>
             setPeers(prevState =>
                 Object.keys(prevState).reduce((acc, key) => {
                     if (key === peerId) {
-                        const updatedStream = prevState[key].stream.getVideoTracks()[0]
-                        updatedStream.enabled = true
+                        const [ videoTrack ] = prevState[key].stream.getVideoTracks()
+                        videoTrack.enabled = true
 
                         return {
                             ...acc,
@@ -214,7 +218,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                     return acc
                 }, {})
             )
-        })
+        )
 
     }, [])
 
