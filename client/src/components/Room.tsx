@@ -33,9 +33,7 @@ export const Room: React.FunctionComponent = () => {
         <VideoContainer>
             {stream && (
                 <VideoUserContainer>
-                    <VideoPlayer
-                        stream={stream}
-                    />
+                    <VideoPlayer stream={stream}/>
                     <ControllerIcons>
                         <IconContainer onClick={() => toggleVideoCamera(id)}>
                             {activeCamera ? (
@@ -54,9 +52,9 @@ export const Room: React.FunctionComponent = () => {
                     </ControllerIcons>
                 </VideoUserContainer>
             )}
-            {Object.values(peers).map((peerState, index) => (
+            {Object.values(peers).map(peerState => (
                 <VideoPlayer
-                    key={index}
+                    key={peerState.stream.id}
                     stream={peerState.stream}
                 />
             ))}

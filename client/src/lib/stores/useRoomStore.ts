@@ -185,6 +185,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 Object.keys(prevState).reduce((acc, key) => {
                     if (key === peerId) {
                         const [ videoTrack ] = prevState[key].stream.getVideoTracks()
+
                         videoTrack.enabled = false
 
                         return {
@@ -205,6 +206,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 Object.keys(prevState).reduce((acc, key) => {
                     if (key === peerId) {
                         const [ videoTrack ] = prevState[key].stream.getVideoTracks()
+
                         videoTrack.enabled = true
 
                         return {
