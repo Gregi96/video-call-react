@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Icons } from 'assets'
@@ -9,9 +9,16 @@ import { VideoPlayer } from './VideoPlayer'
 export const Room: React.FunctionComponent = () => {
     const { id } = useParams()
     const { T } = useTranslationStore()
-    const { ws, peer, stream, peers } = useRoomStore()
-    const [activeCamera, setActiveCamera] = useState(true)
-    const [activeMicrophone, setActiveMicrophone] = useState(true)
+    const {
+        ws,
+        peer,
+        stream,
+        peers,
+        activeCamera,
+        activeMicrophone,
+        toggleMicrophone,
+        toggleVideoCamera
+    } = useRoomStore()
 
     useEffect(() => {
         if (peer) {
@@ -28,18 +35,16 @@ export const Room: React.FunctionComponent = () => {
                 <VideoUserContainer>
                     <VideoPlayer
                         stream={stream}
-                        activeCamera={activeCamera}
-                        activeMicrophone={activeMicrophone}
                     />
                     <ControllerIcons>
-                        <IconContainer onClick={() => setActiveCamera(prev => !prev)}>
+                        <IconContainer onClick={() => toggleVideoCamera(id)}>
                             {activeCamera ? (
                                 <Icons.Camera/>
                             ) : (
                                 <Icons.CameraOff/>
                             )}
                         </IconContainer>
-                        <IconContainer onClick={() => setActiveMicrophone(prev => !prev)}>
+                        <IconContainer onClick={toggleMicrophone}>
                             {activeMicrophone ? (
                                 <Icons.Microphone/>
                             ) : (
@@ -49,10 +54,10 @@ export const Room: React.FunctionComponent = () => {
                     </ControllerIcons>
                 </VideoUserContainer>
             )}
-            {Object.values(peers).map((peer, index) => (
+            {Object.values(peers).map((peerState, index) => (
                 <VideoPlayer
                     key={index}
-                    stream={peer.stream}
+                    stream={peerState.stream}
                 />
             ))}
             <InviteUrl>

@@ -4,5 +4,7 @@ export enum SocketEvents {
     roomCreated = 'room-created',
     getUsers = 'get-users',
     userDisconnected = 'user-disconnected',
-    userJoined = 'user-joined'
+    userJoined = 'user-joined',
+    hideCamera = 'hide-camera',
+    showCamera = 'show-camera'
 }

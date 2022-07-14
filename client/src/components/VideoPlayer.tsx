@@ -1,18 +1,19 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
+import { Icons } from 'assets'
+import { useRoomStore } from 'lib/stores'
+import { R } from 'lib/utils'
 
 type VideoPlayerProps = {
-    stream: MediaStream,
-    activeCamera?: boolean,
-    activeMicrophone?: boolean
+    stream: MediaStream
 }
 
 export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
-    stream,
-    activeCamera = true,
-    activeMicrophone = true
+    stream
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null)
+    const { activeCamera, peers } = useRoomStore()
+    const [offCamera, setOffCamera] = useState(false)
 
     useEffect(() => {
         if (videoRef.current) {
@@ -21,22 +22,54 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
     }, [stream])
 
     useEffect(() => {
-        const [ videoTrack ] = stream.getVideoTracks()
-        const [ audioTrack ] = stream.getAudioTracks()
+        if (R.isEmpty(stream.getVideoTracks())) {
+            return setOffCamera(true)
+        }
 
-        videoTrack.enabled = activeCamera
-        audioTrack.enabled = activeMicrophone
-    }, [activeCamera, activeMicrophone])
+        const [ videoTrack ] = stream.getVideoTracks()
+
+        if (videoTrack.enabled) {
+            return setOffCamera(false)
+        }
+
+        setOffCamera(true)
+    }, [activeCamera, peers])
 
     return (
-        <Video
-            ref={videoRef}
-            autoPlay
-        />
+        <VideoContainer>
+            <Video
+                ref={videoRef}
+                autoPlay
+                muted
+            />
+            {offCamera && (
+                <VideoOff>
+                    <Icons.CameraOff/>
+                </VideoOff>
+            )}
+        </VideoContainer>
     )
 }
+
+const VideoContainer = styled.div`
+    position: relative;
+`
 
 const Video = styled.video`
     object-fit: cover;
     width: 100%;
+`
+
+const VideoOff = styled.div`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: white;
 `
