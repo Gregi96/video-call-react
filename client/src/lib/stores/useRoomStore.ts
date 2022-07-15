@@ -64,7 +64,13 @@ export const useRoomStore = (): useRoomStoreResponse => {
 
                 peerConnection.peerConnection
                     .getSenders()
-                    .find((sender: RTCRtpSender) => sender.track.kind === 'video')
+                    .find((sender: RTCRtpSender) => {
+                        if (sender.track) {
+                            return sender.track.kind === 'video'
+                        }
+
+                        return false
+                    })
                     .replaceTrack(videoTrack)
                     .then(() => {
                         if (myPeer && roomId.length > 0) {
@@ -90,7 +96,13 @@ export const useRoomStore = (): useRoomStoreResponse => {
 
                 peerConnection.peerConnection
                     .getSenders()
-                    .find((sender: RTCRtpSender) => sender.track.kind === 'audio')
+                    .find((sender: RTCRtpSender) => {
+                        if (sender.track) {
+                            return sender.track.kind === 'audio'
+                        }
+
+                        return false
+                    })
                     .replaceTrack(audioTrack)
                     .catch((err: any) => console.error(err))
             })
