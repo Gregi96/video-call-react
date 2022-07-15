@@ -80,6 +80,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                             })
                         }
                     })
+                    .catch(() => {})
             })
         }
     }
@@ -103,6 +104,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                         return false
                     })
                     .replaceTrack(audioTrack)
+                    .catch(() => {})
             })
         }
     }
@@ -139,6 +141,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 switchCameraTrack(localStream, roomId)
                 setActiveCamera(true)
             })
+            .catch(() => {})
     }
 
     const toggleMicrophone = () => {
@@ -166,6 +169,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 switchAudioTrack(localStream)
                 setActiveMicrophone(true)
             })
+            .catch(() => {})
     }
 
     useEffect(() => {
