@@ -18,10 +18,6 @@ const io = new Server(server, {
 
 io.on(Events.Connection, (socket) => {
     roomHandler(socket)
-
-    socket.on(Events.Disconnect, () => {
-        console.log('user is disconnected')
-    })
 })
 
 server.listen(port, () => {

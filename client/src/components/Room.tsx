@@ -72,7 +72,7 @@ export const Room: React.FunctionComponent = () => {
                 <InviteUrl>
                     {window.location.href}
                     <InviteButton onClick={() => copyText(window.location.href)}>
-                        {isCopied ? 'Copied' : 'Copy'}
+                        {isCopied ? T.copied : T.copy}
                     </InviteButton>
                 </InviteUrl>
             </InviteContainer>

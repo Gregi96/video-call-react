@@ -19,7 +19,7 @@ export type useRoomStoreResponse = {
     activeCamera: boolean,
     activeMicrophone: boolean,
     toggleMicrophone: VoidFunction,
-    toggleVideoCamera(roomId: string | undefined): void,
+    toggleVideoCamera(roomId?: string): void,
     addPeer(peerId: string, stream: MediaStream): void,
     removePeer(peerId: string, stream: MediaStream): void
 }
@@ -80,7 +80,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                             })
                         }
                     })
-                    .catch(console.log)
+                    .catch()
             })
         }
     }
@@ -104,7 +104,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                         return false
                     })
                     .replaceTrack(audioTrack)
-                    .catch(console.error)
+                    .catch()
             })
         }
     }
@@ -141,7 +141,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 switchCameraTrack(localStream, roomId)
                 setActiveCamera(true)
             })
-            .catch(console.log)
+            .catch()
     }
 
     const toggleMicrophone = () => {
@@ -169,7 +169,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 switchAudioTrack(localStream)
                 setActiveMicrophone(true)
             })
-            .catch(console.log)
+            .catch()
     }
 
     useEffect(() => {

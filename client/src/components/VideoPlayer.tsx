@@ -24,11 +24,11 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
     }, [stream])
 
     useEffect(() => {
-        if (R.isEmpty(stream.getVideoTracks())) {
+        const [ videoTrack ] = stream.getVideoTracks()
+
+        if (R.isEmpty(videoTrack) || !videoTrack) {
             return setOffCamera(true)
         }
-
-        const [ videoTrack ] = stream.getVideoTracks()
 
         if (videoTrack.enabled) {
             return setOffCamera(false)
