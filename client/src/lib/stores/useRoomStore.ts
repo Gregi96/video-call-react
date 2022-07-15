@@ -247,6 +247,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
         }
 
         ws.on(SocketEvents.userJoined, ({ peerId }) => {
+            console.log('user joined')
             const call = myPeer.call(peerId, stream)
 
             call.on('stream', peerStream => addPeer(peerId, peerStream))
