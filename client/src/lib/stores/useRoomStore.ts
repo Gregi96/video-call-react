@@ -264,7 +264,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
         return () => {
             ws.off(SocketEvents.userJoined)
         }
-    }, [myPeer, stream, peers])
+    }, [myPeer, stream])
 
     return {
         ws,
