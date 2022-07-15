@@ -20,6 +20,4 @@ io.on(Events.Connection, (socket) => {
     roomHandler(socket)
 })
 
-server.listen(port, () => {
-    console.log('Listening to the server', port)
-})
+server.listen(port)

@@ -80,7 +80,6 @@ export const useRoomStore = (): useRoomStoreResponse => {
                             })
                         }
                     })
-                    .catch()
             })
         }
     }
@@ -104,7 +103,6 @@ export const useRoomStore = (): useRoomStoreResponse => {
                         return false
                     })
                     .replaceTrack(audioTrack)
-                    .catch()
             })
         }
     }
@@ -141,7 +139,6 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 switchCameraTrack(localStream, roomId)
                 setActiveCamera(true)
             })
-            .catch()
     }
 
     const toggleMicrophone = () => {
@@ -169,7 +166,6 @@ export const useRoomStore = (): useRoomStoreResponse => {
                 switchAudioTrack(localStream)
                 setActiveMicrophone(true)
             })
-            .catch()
     }
 
     useEffect(() => {
@@ -182,10 +178,6 @@ export const useRoomStore = (): useRoomStoreResponse => {
 
         ws.on(SocketEvents.roomCreated, ({ roomId }: RoomCreatedType) => {
             navigation(ScreenNamesWithParams.chatRoom(roomId))
-        })
-
-        ws.on(SocketEvents.getUsers, ({ roomId, participants }) => {
-            console.log('participants', participants)
         })
 
         ws.on(SocketEvents.userDisconnected, ({ peerId }) => {
@@ -236,7 +228,6 @@ export const useRoomStore = (): useRoomStoreResponse => {
 
         return () => {
             ws.off(SocketEvents.roomCreated)
-            ws.off(SocketEvents.getUsers)
             ws.off(SocketEvents.userDisconnected)
             ws.off(SocketEvents.hideCamera)
             ws.off(SocketEvents.showCamera)
