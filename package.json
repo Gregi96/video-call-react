@@ -1,0 +1,18 @@
+{
+  "name": "video-call-github",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "cd server && yarn install && yarn build && yarn startHeroku && cd -",
+    "heroku-postbuild": "cd client && yarn install && yarn build && cd -"
+  },
+  "engines": {
+    "node": "16.15.0"
+  },
+  "repository": "git@github.com:Gregi96/video-call-react.git",
+  "author": "Gregi96 <grzegorzklimek1996@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "tsc": "2.0.4"
+  }
+}
