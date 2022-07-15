@@ -80,7 +80,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                             })
                         }
                     })
-                    .catch((err: any) => console.error(err))
+                    .catch(console.log)
             })
         }
     }
@@ -104,7 +104,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
                         return false
                     })
                     .replaceTrack(audioTrack)
-                    .catch((err: any) => console.error(err))
+                    .catch(console.error)
             })
         }
     }

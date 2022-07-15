@@ -11,10 +11,7 @@ export const useCopyToClipboard = () => {
             .then(() => {
                 setIsCopied(true)
                 setIsCopying(false)
-
-                setTimeout(() => {
-                    setIsCopied(false)
-                }, 1000)
+                setTimeout(() => setIsCopied(false), 1000)
             })
             .catch(console.log)
     }

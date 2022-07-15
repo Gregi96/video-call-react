@@ -71,7 +71,7 @@ export const Room: React.FunctionComponent = () => {
                 </InviteText>
                 <InviteUrl>
                     {window.location.href}
-                    <InviteButton onClick={() => copyText(`${window.location.href}`)}>
+                    <InviteButton onClick={() => copyText(window.location.href)}>
                         {isCopied ? 'Copied' : 'Copy'}
                     </InviteButton>
                 </InviteUrl>
@@ -98,7 +98,7 @@ const InviteContainer = styled.div`
     margin-top: 30px;
     max-width: 600px;
     padding: 10px;
-    background-color: ${({theme}) => theme.colors.cornflowerblue};
+    background-color: ${({ theme }) => theme.colors.cornflowerblue};
     border-radius: 10px;
 `
 
