@@ -16,6 +16,8 @@ export const theme: AppTheme = {
         beige: '#f5f5dc',
         darkBlue: 'darkblue',
         white: 'white',
-        blueviolet: 'blueviolet'
+        blueviolet: 'blueviolet',
+        lightblue: '#87CEFA',
+        cornflowerblue: '#6495ed'
     }
 }

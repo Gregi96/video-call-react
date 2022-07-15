@@ -1,5 +1,4 @@
 export { Home } from './Home'
 export { LoaderDots } from './LoaderDots'
 export { CreateButton } from './CreateButton'
-export { VideoPlayer } from './VideoPlayer'
 export { Room } from './Room'

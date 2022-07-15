@@ -27,10 +27,6 @@ export const roomHandler = (socket: Socket) => {
             rooms[roomId].push(peerId)
             socket.join(roomId)
             socket.to(roomId).emit(Events.UserJoined, { peerId })
-            socket.emit(Events.GetUsers, {
-                roomId,
-                participants: rooms[roomId]
-            })
         }
 
         socket.on(Events.Disconnect, () => {
@@ -45,4 +41,6 @@ export const roomHandler = (socket: Socket) => {
 
     socket.on(Events.CreateRoom, createRoom)
     socket.on(Events.JoinRoom, joinRoom)
+    socket.on(Events.HideCamera, ({ peerId, roomId }) => socket.to(roomId).emit(Events.HideCamera, { peerId, roomId }))
+    socket.on(Events.ShowCamera, ({ peerId, roomId }) => socket.to(roomId).emit(Events.ShowCamera, { peerId, roomId }))
 }
