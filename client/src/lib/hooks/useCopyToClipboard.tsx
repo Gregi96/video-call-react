@@ -29,7 +29,6 @@ export const useCopyToClipboard = () => {
                 setIsCopying(false)
             })
             .catch()
-
     }
 
     return {
