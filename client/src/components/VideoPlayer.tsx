@@ -5,11 +5,13 @@ import { useRoomStore } from 'lib/stores'
 import { R } from 'lib/utils'
 
 type VideoPlayerProps = {
-    stream: MediaStream
+    stream: MediaStream,
+    ownStream?: boolean
 }
 
 export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
-    stream
+    stream,
+    ownStream
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null)
     const { activeCamera, peers } = useRoomStore()
@@ -40,7 +42,7 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
             <Video
                 ref={videoRef}
                 autoPlay
-                muted
+                muted={ownStream}
             />
             {offCamera && (
                 <VideoOff>

@@ -36,7 +36,10 @@ export const Room: React.FunctionComponent = () => {
             <VideoContainer>
                 {stream && (
                     <VideoUserContainer>
-                        <VideoPlayer stream={stream}/>
+                        <VideoPlayer
+                            stream={stream}
+                            ownStream
+                        />
                         <ControllerIcons>
                             <IconContainer onClick={() => toggleVideoCamera(id)}>
                                 {activeCamera ? (
