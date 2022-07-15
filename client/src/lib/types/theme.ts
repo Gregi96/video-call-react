@@ -15,6 +15,7 @@ export type AppTheme = {
         darkBlue: string,
         white: string,
         blueviolet: string,
-        lightblue: string
+        lightblue: string,
+        cornflowerblue: string
     }
 }
