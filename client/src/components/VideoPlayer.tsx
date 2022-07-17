@@ -20,6 +20,10 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
     useEffect(() => {
         if (videoRef.current) {
             videoRef.current.srcObject = stream
+
+            videoRef.current.onloadedmetadata = () => {
+                videoRef.current!.play()
+            }
         }
     }, [stream])
 
