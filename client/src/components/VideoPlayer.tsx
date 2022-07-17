@@ -47,6 +47,7 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
                 ref={videoRef}
                 autoPlay
                 muted={ownStream}
+                playsInline
             />
             {offCamera && (
                 <VideoOff>
