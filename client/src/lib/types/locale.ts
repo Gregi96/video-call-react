@@ -3,5 +3,7 @@ export type Dictionary = {
     createNewRoomButton: string,
     copyUrlToInvite: string,
     copy: string,
-    copied: string
+    copied: string,
+    acceptCameraAudio: string,
+    tryAgain: string
 }

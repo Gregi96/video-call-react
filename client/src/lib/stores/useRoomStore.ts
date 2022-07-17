@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { v4 as uuidV4 } from 'uuid'
 import Peer from 'peerjs'
 import { ScreenNamesWithParams } from 'lib/routing'
-import { SocketEvents, PeerState, SetState } from 'lib/types'
+import { SocketEvents, PeerState } from 'lib/types'
 import { APP_CONFIG } from 'lib/config'
 
 type RoomCreatedType = {
@@ -247,7 +247,6 @@ export const useRoomStore = (): useRoomStoreResponse => {
         }
 
         ws.on(SocketEvents.userJoined, ({ peerId }) => {
-            console.log('user joined')
             const call = myPeer.call(peerId, stream)
 
             call.on('stream', peerStream => addPeer(peerId, peerStream))

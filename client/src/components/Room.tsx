@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { Icons } from 'assets'
@@ -21,15 +21,41 @@ export const Room: React.FunctionComponent = () => {
         toggleVideoCamera
     } = useRoomStore()
     const { copyText, isCopied } = useCopyToClipboard()
+    const [getAccessToJoinRoom, setGetAccessToJoinRoom] = useState(false)
+    const [checkAgain, setCheckAgain] = useState(false)
 
     useEffect(() => {
-        if (peer) {
+        if (peer && getAccessToJoinRoom) {
             ws.emit(SocketEvents.joinRoom, {
                 roomId: id,
                 peerId: peer.id
             })
         }
-    }, [id, peer])
+    }, [id, peer, getAccessToJoinRoom])
+
+    useEffect(() => {
+        navigator.mediaDevices.getUserMedia({audio: true, video: true})
+            .then(localStream => {
+                if (localStream.getVideoTracks().length > 0 && localStream.getVideoTracks().length > 0) {
+                    setGetAccessToJoinRoom(true)
+
+                    return
+                }
+            })
+    }, [checkAgain])
+
+    if (!getAccessToJoinRoom) {
+        return (
+            <AcceptContainer>
+                <div>
+                    {T.acceptCameraAudio}
+                </div>
+                <button onClick={() => setCheckAgain(prev => !prev)}>
+                    {T.tryAgain}
+                </button>
+            </AcceptContainer>
+        )
+    }
 
     return (
         <div>
@@ -88,6 +114,14 @@ const VideoContainer = styled.div`
 const InviteText = styled.div`
     text-align: center;
     margin-bottom: 5px;
+`
+
+const AcceptContainer = styled.div`
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
 `
 
 const InviteContainer = styled.div`

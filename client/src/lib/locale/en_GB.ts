@@ -5,5 +5,7 @@ export const en_GB: Dictionary = {
     createNewRoomButton: 'Crete new room to stream',
     copyUrlToInvite: 'Copy url to invite friends',
     copy: 'Copy',
-    copied: 'Copied'
+    copied: 'Copied',
+    acceptCameraAudio: 'To connect with other users, you must give permission to access the camera and microphone',
+    tryAgain: 'Try again'
 }

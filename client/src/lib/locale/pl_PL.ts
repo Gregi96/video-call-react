@@ -5,5 +5,7 @@ export const pl_PL: Dictionary = {
     createNewRoomButton: 'Utrzórz nowy pokój aby stremować',
     copyUrlToInvite: 'Skopiuj link aby zaprosić przyjaciół',
     copy: 'Skopiuj',
-    copied: 'Skopiowano'
+    copied: 'Skopiowano',
+    acceptCameraAudio: 'Aby połączyć się z innymi użytkownikami musisz dac zgodę na dostęp do kamery i mikrofonu',
+    tryAgain: 'Spróbuj ponownie'
 }
