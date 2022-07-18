@@ -11,26 +11,10 @@ type RoomCreatedType = {
     roomId: string
 }
 
-export type useRoomStoreResponse = {
-    ws: Socket,
-    peer?: Peer,
-    peers: PeerState,
-    stream?: MediaStream,
-    activeCamera: boolean,
-    activeMicrophone: boolean,
-    usersInRoom: number,
-    checkedUsersInRoom: boolean,
-    toggleMicrophone: VoidFunction,
-    checkCountOfUsersInRoom(roomId?: string): void,
-    toggleVideoCamera(roomId?: string): void,
-    addPeer(peerId: string, stream: MediaStream): void,
-    removePeer(peerId: string, stream: MediaStream): void
-}
-
 const ws = socketIoClient(window.location.origin)
 // const ws = socketIoClient(APP_CONFIG.WP_URL)
 
-export const useRoomStore = (): useRoomStoreResponse => {
+export const useRoomStore = () => {
     const [peers, setPeers] = useState<PeerState>({})
     const [myPeer, setMyPeer] = useState<Peer>()
     const [stream, setStream] = useState<MediaStream>(new MediaStream())
