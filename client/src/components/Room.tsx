@@ -7,6 +7,10 @@ import { SocketEvents } from 'lib/types'
 import { useCopyToClipboard } from 'lib/hooks'
 import { VideoPlayer } from './VideoPlayer'
 
+type VideoContainerProps = {
+    countOfCaller: number
+}
+
 export const Room: React.FunctionComponent = () => {
     const { id } = useParams()
     const { T } = useTranslationStore()
@@ -58,8 +62,8 @@ export const Room: React.FunctionComponent = () => {
     }
 
     return (
-        <div>
-            <VideoContainer>
+        <Container>
+            <VideoContainer countOfCaller={Object.values(peers).length}>
                 {stream && (
                     <VideoUserContainer>
                         <VideoPlayer
@@ -102,13 +106,18 @@ export const Room: React.FunctionComponent = () => {
                     </InviteButton>
                 </InviteUrl>
             </InviteContainer>
-        </div>
+        </Container>
     )
 }
 
-const VideoContainer = styled.div`
+const Container = styled.div`
+    height: 100%;
+`
+
+const VideoContainer = styled.div<VideoContainerProps>`
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-template-columns: ${({ countOfCaller }) => countOfCaller > 1 ? '33% 33% 33%' : '50% 50%'};
+    grid-auto-rows: ${({ countOfCaller }) => countOfCaller > 2 ? '40vh' : '50vh'};
 `
 
 const InviteText = styled.div`

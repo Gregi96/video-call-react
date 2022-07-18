@@ -61,12 +61,14 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
 
 const VideoContainer = styled.div`
     position: relative;
+    width: 100%;
+    height: 100%;
 `
 
 const Video = styled.video`
     object-fit: cover;
     width: 100%;
-    height: 500px;
+    height: 100%;
 `
 
 const VideoOff = styled.div`
