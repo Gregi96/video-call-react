@@ -24,6 +24,7 @@ export const useRoomStore = () => {
     const [hideCameraIds, setHideCameraIds] = useState<Array<string>>([])
     const [usersInRoom, setUsersInRoom] = useState(0)
     const [checkedUsersInRoom, setCheckedUsersInRoom] = useState(false)
+    const [getAccessToJoinRoom, setGetAccessToJoinRoom] = useState(false)
 
     const checkCountOfUsersInRoom = (roomId: string) => ws.emit(SocketEvents.getUsers, {roomId})
 
@@ -166,12 +167,30 @@ export const useRoomStore = () => {
     }
 
     useEffect(() => {
+        navigator.mediaDevices.getUserMedia({audio: true, video: true})
+            .then(localStream => {
+                if (localStream.getVideoTracks().length > 0 && localStream.getAudioTracks().length > 0) {
+                    localStream.getVideoTracks()
+                        .forEach(track => stream.addTrack(track))
+
+                    localStream.getAudioTracks()
+                        .forEach(track => stream.addTrack(track))
+                }
+            })
+            .then(() => {
+                setActiveCamera(true)
+                setActiveMicrophone(true)
+                setGetAccessToJoinRoom(true)
+            })
+    }, [])
+
+    useEffect(() => {
         const meId = uuidV4()
         const peer = new Peer(meId)
 
         setMyPeer(peer)
-        toggleVideoCamera()
-        toggleMicrophone()
+        // toggleVideoCamera()
+        // toggleMicrophone()
 
         ws.on(SocketEvents.roomCreated, ({ roomId }: RoomCreatedType) => {
             navigation(ScreenNamesWithParams.chatRoom(roomId))
@@ -179,7 +198,6 @@ export const useRoomStore = () => {
 
         ws.on(SocketEvents.userDisconnected, ({ peerId, participants }) => {
             removePeer(peerId)
-            setUsersInRoom(participants.length)
         })
 
         ws.on(SocketEvents.hideCamera, ({ peerId, roomId }) =>
@@ -245,6 +263,7 @@ export const useRoomStore = () => {
         activeMicrophone,
         usersInRoom,
         checkedUsersInRoom,
-        checkCountOfUsersInRoom
+        checkCountOfUsersInRoom,
+        getAccessToJoinRoom
     }
 }

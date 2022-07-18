@@ -26,10 +26,10 @@ export const Room: React.FunctionComponent = () => {
         usersInRoom,
         checkedUsersInRoom,
         checkCountOfUsersInRoom,
-        hideCameraIds
+        hideCameraIds,
+        getAccessToJoinRoom
     } = useRoomStore()
     const { copyText, isCopied } = useCopyToClipboard()
-    const [getAccessToJoinRoom, setGetAccessToJoinRoom] = useState(false)
     const [checkAgain, setCheckAgain] = useState(false)
     const [noSpaceInRoom, setNoSpaceInRoom] = useState(true)
 
@@ -40,15 +40,6 @@ export const Room: React.FunctionComponent = () => {
     }, [checkAgain])
 
     useEffect(() => {
-        if (peer && getAccessToJoinRoom) {
-            ws.emit(SocketEvents.joinRoom, {
-                roomId: id,
-                peerId: peer.id
-            })
-        }
-    }, [id, peer, getAccessToJoinRoom])
-
-    useEffect(() => {
         if (!checkedUsersInRoom) {
             return
         }
@@ -57,28 +48,16 @@ export const Room: React.FunctionComponent = () => {
             return setNoSpaceInRoom(true)
         }
 
-        navigator.mediaDevices.getUserMedia({audio: true, video: true})
-            .then(localStream => {
-                if (localStream.getVideoTracks().length > 0 && localStream.getAudioTracks().length > 0) {
-                    setNoSpaceInRoom(false)
-                    setGetAccessToJoinRoom(true)
-
-                    localStream.getVideoTracks()
-                        .forEach(track => {
-                            track.stop()
-                            localStream.removeTrack(track)
-                        })
-
-                    localStream.getAudioTracks()
-                        .forEach(track => {
-                            track.stop()
-                            localStream.removeTrack(track)
-                        })
-
-                    return
-                }
+        if (peer && getAccessToJoinRoom) {
+            ws.emit(SocketEvents.joinRoom, {
+                roomId: id,
+                peerId: peer.id
             })
-    }, [checkAgain, checkedUsersInRoom, usersInRoom])
+
+            setNoSpaceInRoom(false)
+        }
+
+    }, [checkAgain, checkedUsersInRoom, usersInRoom, getAccessToJoinRoom])
 
     if (noSpaceInRoom) {
         return (
