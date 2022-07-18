@@ -1,45 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import { Icons } from 'assets'
-import { useRoomStore } from 'lib/stores'
-import { R } from 'lib/utils'
 
 type VideoPlayerProps = {
     stream: MediaStream,
-    ownStream?: boolean
+    ownStream?: boolean,
+    cameraOff: boolean
 }
 
 export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
     stream,
-    ownStream
+    ownStream,
+    cameraOff
 }) => {
     const videoRef = useRef<HTMLVideoElement>(null)
-    const { activeCamera, peers } = useRoomStore()
-    const [offCamera, setOffCamera] = useState(false)
 
     useEffect(() => {
         if (videoRef.current) {
             videoRef.current.srcObject = stream
 
-            videoRef.current.onloadedmetadata = () => {
-                videoRef.current!.play()
-            }
+            // videoRef.current.onloadedmetadata = () => {
+            //     videoRef.current!.play()
+            // }
         }
     }, [stream])
-
-    useEffect(() => {
-        const [ videoTrack ] = stream.getVideoTracks()
-
-        if (R.isEmpty(videoTrack) || !videoTrack) {
-            return setOffCamera(true)
-        }
-
-        if (videoTrack.enabled) {
-            return setOffCamera(false)
-        }
-
-        setOffCamera(true)
-    }, [activeCamera, peers])
 
     return (
         <VideoContainer>
@@ -50,10 +34,12 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
                 playsInline
                 controls={false}
             />
-            {offCamera && (
-                <VideoOff>
-                    <Icons.CameraOff/>
-                </VideoOff>
+            {cameraOff && (
+                <VideoOffScreen>
+                    <VideoOff>
+                        <Icons.CameraOff/>
+                    </VideoOff>
+                </VideoOffScreen>
             )}
         </VideoContainer>
     )
@@ -69,6 +55,15 @@ const Video = styled.video`
     object-fit: cover;
     width: 100%;
     height: 100%;
+`
+
+const VideoOffScreen = styled.div`
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: black;
 `
 
 const VideoOff = styled.div`

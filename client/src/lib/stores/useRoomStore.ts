@@ -21,6 +21,7 @@ export const useRoomStore = () => {
     const navigation = useNavigate()
     const [activeCamera, setActiveCamera] = useState(false)
     const [activeMicrophone, setActiveMicrophone] = useState(false)
+    const [hideCameraIds, setHideCameraIds] = useState<Array<string>>([])
     const [usersInRoom, setUsersInRoom] = useState(0)
     const [checkedUsersInRoom, setCheckedUsersInRoom] = useState(false)
 
@@ -182,46 +183,16 @@ export const useRoomStore = () => {
         })
 
         ws.on(SocketEvents.hideCamera, ({ peerId, roomId }) =>
-            setPeers(prevState =>
-                Object.keys(prevState).reduce((acc, key) => {
-                    if (key === peerId) {
-                        const [ videoTrack ] = prevState[key].stream.getVideoTracks()
-
-                        videoTrack.enabled = false
-
-                        return {
-                            ...acc,
-                            [key]: {
-                                stream: prevState[key].stream
-                            }
-                        }
-                    }
-
-                    return acc
-                }, {})
-            )
+            setHideCameraIds(prev => [...prev, peerId])
         )
 
-        ws.on(SocketEvents.showCamera, ({ peerId, roomId }) =>
-            setPeers(prevState =>
-                Object.keys(prevState).reduce((acc, key) => {
-                    if (key === peerId) {
-                        const [ videoTrack ] = prevState[key].stream.getVideoTracks()
+        ws.on(SocketEvents.showCamera, ({ peerId, roomId }) => {
+            setHideCameraIds(prev => {
+                const filterHiddenIds = prev.filter(hiddenId => hiddenId !== peerId)
 
-                        videoTrack.enabled = true
-
-                        return {
-                            ...acc,
-                            [key]: {
-                                stream: prevState[key].stream
-                            }
-                        }
-                    }
-
-                    return acc
-                }, {})
-            )
-        )
+                return filterHiddenIds
+            })
+        })
 
         ws.on(SocketEvents.getUsers, users => {
             setUsersInRoom(users.participants.length)
@@ -270,6 +241,7 @@ export const useRoomStore = () => {
         toggleVideoCamera,
         activeCamera,
         toggleMicrophone,
+        hideCameraIds,
         activeMicrophone,
         usersInRoom,
         checkedUsersInRoom,

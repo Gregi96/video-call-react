@@ -25,7 +25,8 @@ export const Room: React.FunctionComponent = () => {
         toggleVideoCamera,
         usersInRoom,
         checkedUsersInRoom,
-        checkCountOfUsersInRoom
+        checkCountOfUsersInRoom,
+        hideCameraIds
     } = useRoomStore()
     const { copyText, isCopied } = useCopyToClipboard()
     const [getAccessToJoinRoom, setGetAccessToJoinRoom] = useState(false)
@@ -33,7 +34,9 @@ export const Room: React.FunctionComponent = () => {
     const [noSpaceInRoom, setNoSpaceInRoom] = useState(true)
 
     useEffect(() => {
-        checkCountOfUsersInRoom(id)
+        if (id) {
+            checkCountOfUsersInRoom(id)
+        }
     }, [checkAgain])
 
     useEffect(() => {
@@ -105,6 +108,7 @@ export const Room: React.FunctionComponent = () => {
                         <VideoPlayer
                             stream={stream}
                             ownStream
+                            cameraOff={!activeCamera}
                         />
                         <ControllerIcons>
                             <IconContainer onClick={() => toggleVideoCamera(id)}>
@@ -124,12 +128,17 @@ export const Room: React.FunctionComponent = () => {
                         </ControllerIcons>
                     </VideoUserContainer>
                 )}
-                {Object.values(peers).map(peerState => (
-                    <VideoPlayer
-                        key={peerState.stream.id}
-                        stream={peerState.stream}
-                    />
-                ))}
+                {Object.keys(peers).map((key => {
+                    const hidden = hideCameraIds.includes(key)
+
+                    return (
+                        <VideoPlayer
+                            key={key}
+                            stream={peers[key].stream}
+                            cameraOff={hidden}
+                        />
+                    )
+                }))}
             </VideoContainer>
             <InviteContainer>
                 <InviteText>

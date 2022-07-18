@@ -1,5 +1,5 @@
 import { useStore } from 'outstated'
-import { useRoomStore as roomStore, useRoomStoreResponse } from './useRoomStore'
+import { useRoomStore as roomStore } from './useRoomStore'
 import { useTranslationStore as translationStore  } from './useTranslationStore'
 
 export const stores = [
