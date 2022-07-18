@@ -69,6 +69,12 @@ export const Room: React.FunctionComponent = () => {
                             localStream.removeTrack(track)
                         })
 
+                    localStream.getAudioTracks()
+                        .forEach(track => {
+                            track.stop()
+                            localStream.removeTrack(track)
+                        })
+
                     return
                 }
             })
