@@ -59,7 +59,7 @@ export const Room: React.FunctionComponent = () => {
 
         navigator.mediaDevices.getUserMedia({audio: true, video: true})
             .then(localStream => {
-                if (localStream.getVideoTracks().length > 0 && localStream.getVideoTracks().length > 0) {
+                if (localStream.getVideoTracks().length > 0 && localStream.getAudioTracks().length > 0) {
                     setNoSpaceInRoom(false)
                     setGetAccessToJoinRoom(true)
 
