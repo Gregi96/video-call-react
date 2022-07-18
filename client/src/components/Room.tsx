@@ -24,7 +24,8 @@ export const Room: React.FunctionComponent = () => {
         toggleMicrophone,
         toggleVideoCamera,
         usersInRoom,
-        checkedUsersInRoom
+        checkedUsersInRoom,
+        checkCountOfUsersInRoom
     } = useRoomStore()
     const { copyText, isCopied } = useCopyToClipboard()
     const [getAccessToJoinRoom, setGetAccessToJoinRoom] = useState(false)
@@ -32,9 +33,7 @@ export const Room: React.FunctionComponent = () => {
     const [noSpaceInRoom, setNoSpaceInRoom] = useState(true)
 
     useEffect(() => {
-        ws.emit(SocketEvents.getUsers, {
-            roomId: id
-        })
+        checkCountOfUsersInRoom(id)
     }, [checkAgain])
 
     useEffect(() => {

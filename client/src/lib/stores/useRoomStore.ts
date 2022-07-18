@@ -21,6 +21,7 @@ export type useRoomStoreResponse = {
     usersInRoom: number,
     checkedUsersInRoom: boolean,
     toggleMicrophone: VoidFunction,
+    checkCountOfUsersInRoom(roomId?: string): void,
     toggleVideoCamera(roomId?: string): void,
     addPeer(peerId: string, stream: MediaStream): void,
     removePeer(peerId: string, stream: MediaStream): void
@@ -38,6 +39,12 @@ export const useRoomStore = (): useRoomStoreResponse => {
     const [activeMicrophone, setActiveMicrophone] = useState(false)
     const [usersInRoom, setUsersInRoom] = useState(0)
     const [checkedUsersInRoom, setCheckedUsersInRoom] = useState(false)
+
+    const checkCountOfUsersInRoom = (roomId: string) => {
+        ws.emit(SocketEvents.getUsers, {
+            roomId
+        })
+    }
 
     const removePeer = (peerId: string) => setPeers(prev => Object.keys(prev)
         .reduce((acc, key) => {
@@ -285,6 +292,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
         toggleMicrophone,
         activeMicrophone,
         usersInRoom,
-        checkedUsersInRoom
+        checkedUsersInRoom,
+        checkCountOfUsersInRoom
     }
 }
