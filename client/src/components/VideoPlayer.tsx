@@ -48,6 +48,7 @@ export const VideoPlayer: React.FunctionComponent<VideoPlayerProps> = ({
                 autoPlay
                 muted={ownStream}
                 playsInline
+                controls={false}
             />
             {offCamera && (
                 <VideoOff>
@@ -65,6 +66,7 @@ const VideoContainer = styled.div`
 const Video = styled.video`
     object-fit: cover;
     width: 100%;
+    height: 500px;
 `
 
 const VideoOff = styled.div`
