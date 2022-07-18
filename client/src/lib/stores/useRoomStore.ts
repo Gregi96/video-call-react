@@ -11,29 +11,20 @@ type RoomCreatedType = {
     roomId: string
 }
 
-export type useRoomStoreResponse = {
-    ws: Socket,
-    peer?: Peer,
-    peers: PeerState,
-    stream?: MediaStream,
-    activeCamera: boolean,
-    activeMicrophone: boolean,
-    toggleMicrophone: VoidFunction,
-    toggleVideoCamera(roomId?: string): void,
-    addPeer(peerId: string, stream: MediaStream): void,
-    removePeer(peerId: string, stream: MediaStream): void
-}
-
 const ws = socketIoClient(window.location.origin)
 // const ws = socketIoClient(APP_CONFIG.WP_URL)
 
-export const useRoomStore = (): useRoomStoreResponse => {
+export const useRoomStore = () => {
     const [peers, setPeers] = useState<PeerState>({})
     const [myPeer, setMyPeer] = useState<Peer>()
     const [stream, setStream] = useState<MediaStream>(new MediaStream())
     const navigation = useNavigate()
     const [activeCamera, setActiveCamera] = useState(false)
     const [activeMicrophone, setActiveMicrophone] = useState(false)
+    const [usersInRoom, setUsersInRoom] = useState(0)
+    const [checkedUsersInRoom, setCheckedUsersInRoom] = useState(false)
+
+    const checkCountOfUsersInRoom = (roomId: string) => ws.emit(SocketEvents.getUsers, {roomId})
 
     const removePeer = (peerId: string) => setPeers(prev => Object.keys(prev)
         .reduce((acc, key) => {
@@ -185,8 +176,9 @@ export const useRoomStore = (): useRoomStoreResponse => {
             navigation(ScreenNamesWithParams.chatRoom(roomId))
         })
 
-        ws.on(SocketEvents.userDisconnected, ({ peerId }) => {
+        ws.on(SocketEvents.userDisconnected, ({ peerId, participants }) => {
             removePeer(peerId)
+            setUsersInRoom(participants.length)
         })
 
         ws.on(SocketEvents.hideCamera, ({ peerId, roomId }) =>
@@ -231,11 +223,17 @@ export const useRoomStore = (): useRoomStoreResponse => {
             )
         )
 
+        ws.on(SocketEvents.getUsers, users => {
+            setUsersInRoom(users.participants.length)
+            setCheckedUsersInRoom(true)
+        })
+
         return () => {
             ws.off(SocketEvents.roomCreated)
             ws.off(SocketEvents.userDisconnected)
             ws.off(SocketEvents.hideCamera)
             ws.off(SocketEvents.showCamera)
+            ws.off(SocketEvents.getUsers)
             myPeer?.disconnect()
             myPeer?.destroy()
         }
@@ -272,6 +270,9 @@ export const useRoomStore = (): useRoomStoreResponse => {
         toggleVideoCamera,
         activeCamera,
         toggleMicrophone,
-        activeMicrophone
+        activeMicrophone,
+        usersInRoom,
+        checkedUsersInRoom,
+        checkCountOfUsersInRoom
     }
 }

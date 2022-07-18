@@ -9,6 +9,10 @@ type JoinRoomProps = {
     peerId: string
 }
 
+type GetUsersProps = {
+    roomId: string
+}
+
 export const roomHandler = (socket: Socket) => {
     const createRoom = () => {
         const roomId = uuidV4()
@@ -19,7 +23,7 @@ export const roomHandler = (socket: Socket) => {
 
     const leaveRoom = ({ roomId, peerId }: JoinRoomProps) => {
         rooms[roomId] = rooms[roomId].filter(id => id !== peerId)
-        socket.to(roomId).emit(Events.UserDisconnected, { peerId })
+        socket.to(roomId).emit(Events.UserDisconnected, { peerId, participants: rooms[roomId] })
     }
 
     const joinRoom = ({ roomId, peerId }: JoinRoomProps) => {
@@ -39,6 +43,12 @@ export const roomHandler = (socket: Socket) => {
         })
     }
 
+    const getUsers = ({ roomId }: GetUsersProps) => socket.emit(Events.GetUsers, {
+            roomId,
+            participants: rooms[roomId]
+        })
+
+    socket.on(Events.GetUsers, getUsers)
     socket.on(Events.CreateRoom, createRoom)
     socket.on(Events.JoinRoom, joinRoom)
     socket.on(Events.HideCamera, ({ peerId, roomId }) => socket.to(roomId).emit(Events.HideCamera, { peerId, roomId }))
