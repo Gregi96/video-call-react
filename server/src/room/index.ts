@@ -43,12 +43,10 @@ export const roomHandler = (socket: Socket) => {
         })
     }
 
-    const getUsers = ({ roomId }: GetUsersProps) => {
-        socket.emit(Events.GetUsers, {
+    const getUsers = ({ roomId }: GetUsersProps) => socket.emit(Events.GetUsers, {
             roomId,
             participants: rooms[roomId]
         })
-    }
 
     socket.on(Events.GetUsers, getUsers)
     socket.on(Events.CreateRoom, createRoom)

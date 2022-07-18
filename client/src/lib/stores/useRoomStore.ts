@@ -40,11 +40,7 @@ export const useRoomStore = (): useRoomStoreResponse => {
     const [usersInRoom, setUsersInRoom] = useState(0)
     const [checkedUsersInRoom, setCheckedUsersInRoom] = useState(false)
 
-    const checkCountOfUsersInRoom = (roomId: string) => {
-        ws.emit(SocketEvents.getUsers, {
-            roomId
-        })
-    }
+    const checkCountOfUsersInRoom = (roomId: string) => ws.emit(SocketEvents.getUsers, {roomId})
 
     const removePeer = (peerId: string) => setPeers(prev => Object.keys(prev)
         .reduce((acc, key) => {

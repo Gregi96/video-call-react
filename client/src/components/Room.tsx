@@ -172,8 +172,8 @@ const AcceptContainer = styled.div`
 const InviteContainer = styled.div`
     position: absolute;
     top: 0;
-    transform: translateX(-50%);
     left: 50%;
+    transform: translateX(-50%);
     display: flex;
     flex-direction: column;
     margin-left: auto;
