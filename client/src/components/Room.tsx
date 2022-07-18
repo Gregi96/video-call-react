@@ -22,11 +22,20 @@ export const Room: React.FunctionComponent = () => {
         activeCamera,
         activeMicrophone,
         toggleMicrophone,
-        toggleVideoCamera
+        toggleVideoCamera,
+        usersInRoom,
+        checkedUsersInRoom
     } = useRoomStore()
     const { copyText, isCopied } = useCopyToClipboard()
     const [getAccessToJoinRoom, setGetAccessToJoinRoom] = useState(false)
     const [checkAgain, setCheckAgain] = useState(false)
+    const [noSpaceInRoom, setNoSpaceInRoom] = useState(true)
+
+    useEffect(() => {
+        ws.emit(SocketEvents.getUsers, {
+            roomId: id
+        })
+    }, [checkAgain])
 
     useEffect(() => {
         if (peer && getAccessToJoinRoom) {
@@ -38,15 +47,43 @@ export const Room: React.FunctionComponent = () => {
     }, [id, peer, getAccessToJoinRoom])
 
     useEffect(() => {
+        if (!checkedUsersInRoom) {
+            return
+        }
+
+        if (checkedUsersInRoom && usersInRoom > 3) {
+            return setNoSpaceInRoom(true)
+        }
+
         navigator.mediaDevices.getUserMedia({audio: true, video: true})
             .then(localStream => {
                 if (localStream.getVideoTracks().length > 0 && localStream.getVideoTracks().length > 0) {
+                    setNoSpaceInRoom(false)
                     setGetAccessToJoinRoom(true)
+
+                    localStream.getVideoTracks()
+                        .forEach(track => {
+                            track.stop()
+                            localStream.removeTrack(track)
+                        })
 
                     return
                 }
             })
-    }, [checkAgain])
+    }, [checkAgain, checkedUsersInRoom, usersInRoom])
+
+    if (noSpaceInRoom) {
+        return (
+            <AcceptContainer>
+                <div>
+                    {T.noSpaceInRoom}
+                </div>
+                <button onClick={() => setCheckAgain(prev => !prev)}>
+                    {T.tryAgain}
+                </button>
+            </AcceptContainer>
+        )
+    }
 
     if (!getAccessToJoinRoom) {
         return (
@@ -116,8 +153,8 @@ const Container = styled.div`
 
 const VideoContainer = styled.div<VideoContainerProps>`
     display: grid;
-    grid-template-columns: ${({ countOfCaller }) => countOfCaller > 1 ? '33% 33% 33%' : '50% 50%'};
-    grid-auto-rows: ${({ countOfCaller }) => countOfCaller > 2 ? '40vh' : '50vh'};
+    grid-template-columns: 50% 50%;
+    grid-auto-rows: ${({ countOfCaller }) => countOfCaller > 1 ? '50vh' : '100vh'};
 `
 
 const InviteText = styled.div`
@@ -134,6 +171,10 @@ const AcceptContainer = styled.div`
 `
 
 const InviteContainer = styled.div`
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    left: 50%;
     display: flex;
     flex-direction: column;
     margin-left: auto;

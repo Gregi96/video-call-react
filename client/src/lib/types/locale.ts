@@ -5,5 +5,6 @@ export type Dictionary = {
     copy: string,
     copied: string,
     acceptCameraAudio: string,
-    tryAgain: string
+    tryAgain: string,
+    noSpaceInRoom: string
 }

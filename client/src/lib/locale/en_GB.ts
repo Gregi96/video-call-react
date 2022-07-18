@@ -7,5 +7,6 @@ export const en_GB: Dictionary = {
     copy: 'Copy',
     copied: 'Copied',
     acceptCameraAudio: 'To connect with other users, you must give permission to access the camera and microphone',
-    tryAgain: 'Try again'
+    tryAgain: 'Try again',
+    noSpaceInRoom: 'No space in room, to many users'
 }

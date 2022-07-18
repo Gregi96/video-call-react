@@ -5,5 +5,6 @@ export enum SocketEvents {
     userDisconnected = 'user-disconnected',
     userJoined = 'user-joined',
     hideCamera = 'hide-camera',
-    showCamera = 'show-camera'
+    showCamera = 'show-camera',
+    getUsers = 'get-users'
 }

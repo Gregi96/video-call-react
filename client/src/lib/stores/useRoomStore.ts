@@ -18,6 +18,8 @@ export type useRoomStoreResponse = {
     stream?: MediaStream,
     activeCamera: boolean,
     activeMicrophone: boolean,
+    usersInRoom: number,
+    checkedUsersInRoom: boolean,
     toggleMicrophone: VoidFunction,
     toggleVideoCamera(roomId?: string): void,
     addPeer(peerId: string, stream: MediaStream): void,
@@ -34,6 +36,8 @@ export const useRoomStore = (): useRoomStoreResponse => {
     const navigation = useNavigate()
     const [activeCamera, setActiveCamera] = useState(false)
     const [activeMicrophone, setActiveMicrophone] = useState(false)
+    const [usersInRoom, setUsersInRoom] = useState(0)
+    const [checkedUsersInRoom, setCheckedUsersInRoom] = useState(false)
 
     const removePeer = (peerId: string) => setPeers(prev => Object.keys(prev)
         .reduce((acc, key) => {
@@ -185,8 +189,9 @@ export const useRoomStore = (): useRoomStoreResponse => {
             navigation(ScreenNamesWithParams.chatRoom(roomId))
         })
 
-        ws.on(SocketEvents.userDisconnected, ({ peerId }) => {
+        ws.on(SocketEvents.userDisconnected, ({ peerId, participants }) => {
             removePeer(peerId)
+            setUsersInRoom(participants.length)
         })
 
         ws.on(SocketEvents.hideCamera, ({ peerId, roomId }) =>
@@ -231,11 +236,17 @@ export const useRoomStore = (): useRoomStoreResponse => {
             )
         )
 
+        ws.on(SocketEvents.getUsers, users => {
+            setUsersInRoom(users.participants.length)
+            setCheckedUsersInRoom(true)
+        })
+
         return () => {
             ws.off(SocketEvents.roomCreated)
             ws.off(SocketEvents.userDisconnected)
             ws.off(SocketEvents.hideCamera)
             ws.off(SocketEvents.showCamera)
+            ws.off(SocketEvents.getUsers)
             myPeer?.disconnect()
             myPeer?.destroy()
         }
@@ -272,6 +283,8 @@ export const useRoomStore = (): useRoomStoreResponse => {
         toggleVideoCamera,
         activeCamera,
         toggleMicrophone,
-        activeMicrophone
+        activeMicrophone,
+        usersInRoom,
+        checkedUsersInRoom
     }
 }
