@@ -27,11 +27,12 @@ export const Room: React.FunctionComponent = () => {
         checkedUsersInRoom,
         checkCountOfUsersInRoom,
         hideCameraIds,
-        getAccessToJoinRoom
+        getAccessToJoinRoom,
+        setCheckAgainAccess
     } = useRoomStore()
     const { copyText, isCopied } = useCopyToClipboard()
     const [checkAgain, setCheckAgain] = useState(false)
-    const [noSpaceInRoom, setNoSpaceInRoom] = useState(true)
+    const [noSpaceInRoom, setNoSpaceInRoom] = useState(false)
 
     useEffect(() => {
         if (id) {
@@ -78,7 +79,7 @@ export const Room: React.FunctionComponent = () => {
                 <div>
                     {T.acceptCameraAudio}
                 </div>
-                <button onClick={() => setCheckAgain(prev => !prev)}>
+                <button onClick={() => setCheckAgainAccess(prev => !prev)}>
                     {T.tryAgain}
                 </button>
             </AcceptContainer>

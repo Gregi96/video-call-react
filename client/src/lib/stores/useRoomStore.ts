@@ -25,6 +25,7 @@ export const useRoomStore = () => {
     const [usersInRoom, setUsersInRoom] = useState(0)
     const [checkedUsersInRoom, setCheckedUsersInRoom] = useState(false)
     const [getAccessToJoinRoom, setGetAccessToJoinRoom] = useState(false)
+    const [checkAgainAccess, setCheckAgainAccess] = useState(false)
 
     const checkCountOfUsersInRoom = (roomId: string) => ws.emit(SocketEvents.getUsers, {roomId})
 
@@ -182,7 +183,7 @@ export const useRoomStore = () => {
                 setActiveMicrophone(true)
                 setGetAccessToJoinRoom(true)
             })
-    }, [])
+    }, [checkAgainAccess])
 
     useEffect(() => {
         const meId = uuidV4()
@@ -264,6 +265,7 @@ export const useRoomStore = () => {
         usersInRoom,
         checkedUsersInRoom,
         checkCountOfUsersInRoom,
-        getAccessToJoinRoom
+        getAccessToJoinRoom,
+        setCheckAgainAccess
     }
 }
